@@ -14,7 +14,7 @@ services:
     depends_on:
       - flaskapp
     networks:
-      - app_net
+      - bookstore_net
 
   flaskapp:
     build: .
@@ -24,7 +24,7 @@ services:
     ports:
       - "5000:5000"
     networks:
-      - app_net
+      - bookstore_net
 
 networks:
-  app_net:
+  bookstore_net:
