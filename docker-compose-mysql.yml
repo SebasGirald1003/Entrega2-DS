@@ -16,18 +16,6 @@ services:
     networks:
       - bookstore_net
 
-  flaskapp:
-    build: .
-    restart: always
-    environment:
-      - FLASK_ENV=development
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-    networks:
-      - bookstore_net
-
 volumes:
   db_data:
 
