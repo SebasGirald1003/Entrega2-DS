@@ -6,6 +6,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /mnt/efs/static:/usr/share/nginx/html/static
     depends_on:
       - flaskapp
     networks:
@@ -17,6 +18,8 @@ services:
       - .env
     expose:
       - "5000"
+    volumes:
+      - /mnt/efs/uploads:/app/uploads
     networks:
       - bookstore_net
 
