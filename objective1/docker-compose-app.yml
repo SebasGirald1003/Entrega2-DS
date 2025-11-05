@@ -4,13 +4,14 @@ services:
   nginx:
     image: nginx:stable
     container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      # - ./ssl:/etc/nginx/ssl
-      # - ./ssl.conf:/etc/nginx/ssl.conf:ro
-    ports:
-      - 80:80
-      # - 443:443
+      - ./ssl.conf:/etc/nginx/ssl.conf:ro
+      - ./certbot:/etc/letsencrypt
     depends_on:
       - flaskapp
     command: >
@@ -24,8 +25,8 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     networks:
       - bookstore_net
 
