@@ -58,6 +58,10 @@ def initialize_delivery_providers():
 def home():
     return render_template('home.html')
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 if __name__ == '__main__':
 # OJO este conexto crea las tablas e inicia los proveedores de entrega, 
 # se debe ejecutar cada que se reinstala y ejecuta la aplicación Bookstore
