@@ -11,7 +11,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl.conf:/etc/nginx/ssl.conf:ro
-      - ./certbot:/etc/letsencrypt
+      - /etc/letsencrypt/live/sdproject.store:/etc/letsencrypt/live/sdproject.store:ro
+      - /etc/letsencrypt/archive/sdproject.store:/etc/letsencrypt/archive/sdproject.store:ro
     depends_on:
       - flaskapp
     command: >
