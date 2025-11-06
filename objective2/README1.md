@@ -1,11 +1,11 @@
-# 🚀 Objetivo 2: Despliegue con Autoescalado en AWS, RDS, Load Balancer y EFS
+# Objetivo 2: Despliegue con Autoescalado en AWS, RDS, Load Balancer y EFS
 
 El objetivo consistió en desplegar la misma aplicación **BookStore Monolítica** del objetivo anterior, pero ahora integrando **servicios administrados de AWS** para lograr **alta disponibilidad**, **escalabilidad automática** y **resiliencia**.  
 Se implementaron los siguientes recursos: **Amazon RDS (Aurora)**, **Elastic File System (EFS)**, **Elastic Load Balancer (ELB)** y **Auto Scaling Groups (ASG)**.
 
 ---
 
-## ⚙️ 1. Cambios respecto al objetivo anterior
+## 1. Cambios respecto al objetivo anterior
 
 - Se unificó el manifiesto `docker-compose.yml` para incluir tanto el servicio **NGINX** como **FlaskApp**.  
 - Se actualizó el archivo `.env` con las credenciales y endpoint del servicio RDS.  
@@ -15,7 +15,7 @@ Se implementaron los siguientes recursos: **Amazon RDS (Aurora)**, **Elastic Fil
 
 ---
 
-## 🗄️ 2. Base de Datos RDS (Aurora MySQL)
+## 2. Base de Datos RDS (Aurora MySQL)
 
 Se creó una base de datos **Aurora MySQL** administrada por AWS.  
 Una vez disponible el **endpoint RDS**, se configuró la conexión desde la instancia base mediante:
@@ -41,7 +41,7 @@ Con esto, las tablas quedaron creadas en RDS y disponibles para todas las instan
 
 ---
 
-## 📦 3. Creación del Elastic File System (EFS)
+## 3. Creación del Elastic File System (EFS)
 
 - Se aprovisionó un **EFS** en la misma VPC y subredes que las instancias EC2.  
 - Endpoint EFS: `fs-0f92c6f8037f60da3.efs.us-east-1.amazonaws.com`  
@@ -51,7 +51,7 @@ Esto garantiza **persistencia y consistencia de archivos** entre réplicas de la
 
 ---
 
-## 🖼️ 4. Creación de Imagen AMI y Plantilla de Lanzamiento
+## 4. Creación de Imagen AMI y Plantilla de Lanzamiento
 
 Después de configurar la instancia base correctamente:
 
@@ -80,7 +80,7 @@ docker compose up -d
 
 ---
 
-## 🎯 5. Creación del Target Group
+## 5. Creación del Target Group
 
 - Nombre: **bookstore-tg**  
 - Tipo: **Instance**  
@@ -92,7 +92,7 @@ El Target Group monitorea las instancias y las asocia dinámicamente al **Load B
 
 ---
 
-## 🌐 6. Creación del Load Balancer
+## 6. Creación del Load Balancer
 
 Se configuró un **Application Load Balancer (ALB)** con las siguientes características:
 
@@ -105,7 +105,7 @@ Este servicio distribuye las peticiones entrantes entre las instancias disponibl
 
 ---
 
-## ⚡ 7. Creación del Auto Scaling Group
+## 7. Creación del Auto Scaling Group
 
 - Nombre: **bookstore-asg**  
 - Plantilla: Launch Template creada previamente.  
@@ -121,7 +121,7 @@ Con esta configuración, la aplicación se replica automáticamente bajo alta de
 
 ---
 
-## 🔒 8. Certificación SSL y Subdominio
+## 8. Certificación SSL y Subdominio
 
 Se definió un subdominio para este despliegue: **autoscale.sdproject.store**.
 
@@ -132,18 +132,19 @@ Se definió un subdominio para este despliegue: **autoscale.sdproject.store**.
 |------|---------|--------|------|
 | CNAME | autoscale | `bookstore-lb-d5695ead7c8a3ceb.elb.us-east-1.amazonaws.com` | 14400 |
 
-📜 **CNAME de validación de ACM:**  
+**CNAME de validación de ACM:**  
 - Nombre: `_3de77e264b10743d9a49e22846be70a3.autoscale`  
 - Valor: `_b7fa6f8907ad5f93ee397a67a0a4e590.jkddzztszm.acm-validations.aws`  
 
-📷 **Configuración CAA:**
-![CAA](https://github.com/user-attachments/assets/071a43f1-6aa3-4fd9-b4db-b930407a0bdf)
+**Configuración CAA:**  
+  
+![CAA](https://github.com/user-attachments/assets/071a43f1-6aa3-4fd9-b4db-b930407a0bdf)  
 
-🔗 **URL final:** [https://autoscale.sdproject.store](https://autoscale.sdproject.store)
+**URL final:** [https://autoscale.sdproject.store](https://autoscale.sdproject.store)
 
 ---
 
-## ✅ 9. Validaciones finales
+## 9. Validaciones finales
 
 | Validación | Resultado |
 |-------------|------------|
@@ -155,7 +156,7 @@ Se definió un subdominio para este despliegue: **autoscale.sdproject.store**.
 
 ---
 
-## 🧭 10. Conclusiones
+## 10. Conclusiones
 
 - Se logró una arquitectura **autoescalable, segura y altamente disponible** sobre AWS.  
 - La aplicación ahora es capaz de manejar variaciones en la carga y tolerar fallos de manera automática.  
