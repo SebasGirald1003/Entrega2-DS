@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-db
+  namespace: sock-shop
+  labels:
+    name: orders-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: orders-db
+  template:
+    metadata:
+      labels:
+        name: orders-db
+    spec:
+      containers:
+      - name: orders-db
+        image: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
+        securityContext:
+          capabilities:
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+            drop:
+              - all
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        - mountPath: /data/db
+          name: efs-storage
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      - name: efs-storage
+        persistentVolumeClaim:
+          claimName: efs-pvc

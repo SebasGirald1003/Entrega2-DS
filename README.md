@@ -160,15 +160,12 @@ Entrega2-DS/
 │   └── README_Objetivo3.md
 │
 ├── objective4/
-│   ├── k8s/
-│   │   └── storage-efs.yaml
-│   │   ├── deployment-flask.yaml
-│   │   ├── deployment-nginx.yaml
-│   │   ├── private-ecr-driver.yaml
-│   │   └── configmap.yaml
-│   │   └── secrets.yaml
-│   │   └── service-loadbalancer.yaml
-│   └── README_Objetivo4.md
+│    ├── README.md                
+│    └── k8s/
+│         ├── efs-sc.yaml           
+│         ├── efs-pv-pvc.yaml 
+│         ├── orders-db-fixed.yaml 
+│         └── namespace.yaml      
 └── README_GENERAL.md
 
 ```

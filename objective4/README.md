@@ -1,13 +1,13 @@
 # Objetivo 4: Implementación de Microservicios Sock-Shop en Amazon EKS con Almacenamiento Persistente EFS
 
-## 📘 Fuente de referencia
+## Fuente de referencia
 
 > **Guía base utilizada:** “Instalación de AWS EKS con EFS” (documento base del curso/laboratorio).  
 > Todos los comandos, configuraciones y resultados descritos a continuación fueron obtenidos siguiendo dicha guía, con adaptaciones y explicaciones adicionales para asegurar el entendimiento del proceso completo de implementación.
 
 ---
 
-## 🧱 Descripción General
+## Descripción General
 
 El propósito de este objetivo es desplegar una aplicación de microservicios (**Sock-Shop**) dentro de un clúster **Amazon EKS**, utilizando **Amazon Elastic File System (EFS)** como sistema de almacenamiento persistente.
 
@@ -15,7 +15,7 @@ El enfoque de este ejercicio es comprobar cómo los datos almacenados en servici
 
 ---
 
-## ⚙️ Requisitos Previos
+## Requisitos Previos
 
 Antes de comenzar, se debe contar con los siguientes componentes:
 
@@ -32,7 +32,7 @@ Antes de comenzar, se debe contar con los siguientes componentes:
 
 ---
 
-## ☁️ Configuración del Almacenamiento (EFS + EKS)
+## Configuración del Almacenamiento (EFS + EKS)
 
 ### 1. Crear el StorageClass
 
@@ -70,6 +70,9 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: efs-sc
+  claimRef:
+    namespace: sock-shop
+    name: efs-pvc
   csi:
     driver: efs.csi.aws.com
     volumeHandle: fs-037f6fed76344158a
@@ -78,10 +81,12 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: efs-pvc
+  namespace: sock-shop
 spec:
   accessModes:
     - ReadWriteMany
   storageClassName: efs-sc
+  volumeName: efs-pv
   resources:
     requests:
       storage: 5Gi
@@ -106,12 +111,23 @@ Esto confirma la vinculación exitosa entre EFS y el clúster EKS.
 
 ---
 
-## 🧩 Despliegue de la Aplicación Sock-Shop
+## Despliegue de la Aplicación Sock-Shop
 
 ### 1. Crear el Namespace y desplegar los servicios
 
+Archivo: `namespace.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sock-shop
+```
+
+Aplicar:
+
 ```bash
-kubectl create namespace sock-shop
+kubectl apply -f namespace.yaml
 kubectl apply -f deploy/ -n sock-shop
 ```
 
@@ -138,21 +154,60 @@ front-end  LoadBalancer  a17ebd47692194dbd9e012af948f49ce-1510623585.us-east-1.e
 
 ---
 
-## 💾 Montaje del Volumen EFS en el servicio `orders-db`
+## Montaje del Volumen EFS en el servicio `orders-db`
 
 ### Modificación del Deployment
 
-El archivo `orders-db` fue ajustado para montar el EFS como volumen persistente:
+Archivo: `orders-db-fixed.yaml`:
 
 ```yaml
-volumeMounts:
-  - name: efs-storage
-    mountPath: /data/db
-
-volumes:
-  - name: efs-storage
-    persistentVolumeClaim:
-      claimName: efs-pvc
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-db
+  namespace: sock-shop
+  labels:
+    name: orders-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: orders-db
+  template:
+    metadata:
+      labels:
+        name: orders-db
+    spec:
+      containers:
+      - name: orders-db
+        image: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
+        securityContext:
+          capabilities:
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+            drop:
+              - all
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        - mountPath: /data/db
+          name: efs-storage
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      - name: efs-storage
+        persistentVolumeClaim:
+          claimName: efs-pvc
 ```
 
 Guardar como `orders-db-fixed.yaml` y aplicar:
@@ -191,7 +246,7 @@ kubectl rollout restart deployment orders-db -n sock-shop
 
 ---
 
-## ✅ Verificación Final
+## Verificación Final
 
 ### Estado General
 ```bash
@@ -213,7 +268,7 @@ kubectl logs deploy/orders-db -n sock-shop --tail=20
 
 ---
 
-## 🧾 Conclusiones
+## Conclusiones
 
 - Se desplegó la aplicación Sock-Shop sobre un clúster EKS operativo.  
 - Se configuró EFS como sistema de almacenamiento persistente y compartido.  
@@ -224,7 +279,7 @@ Todos los resultados fueron obtenidos siguiendo la guía original de implementac
 
 ---
 
-## 📚 Referencia Técnica
+## Referencia Técnica
 
 - Documento original: “Instalación AWS EKS EFS” (PDF del laboratorio oficial).  
 - Repositorio base de la aplicación: [https://github.com/microservices-demo/microservices-demo](https://github.com/microservices-demo/microservices-demo)  
