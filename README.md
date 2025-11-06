@@ -6,7 +6,9 @@
 - Juan José Vásquez - jjvasquezg@eafit.edu.co  
 - Sebastián Giraldo - sgiraldoa7@eafit.edu.co
   
-**Profesor:** Edwin Nelson Montoya Munera - emontoya@eafit.edu.co  
+**Profesor:** Edwin Nelson Montoya Munera - emontoya@eafit.edu.co
+
+## VIDEO DEMOSTRATIVO: [Proyecto2SD]()
 
 ---
 
