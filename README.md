@@ -122,7 +122,7 @@ Entrega2-DS/
 │   ├── Dockerfile
 │   ├── nginx.conf
 │   ├── ssl.conf
-│   └── README_Objetivo1.md
+│   └── README.md
 │
 ├── objective2/
 │   ├── controllers/
@@ -136,7 +136,7 @@ Entrega2-DS/
 │   ├── docker-compose.yml
 │   ├── Dockerfile
 │   ├── nginx.conf
-│   └── README_Objetivo2.md
+│   └── README.md
 │
 ├── objective3/
 │   ├── controllers/
@@ -157,7 +157,7 @@ Entrega2-DS/
 │   ├── requirements.txt
 │   ├── Dockerfile
 │   ├── nginx.conf
-│   └── README_Objetivo3.md
+│   └── README.md
 │
 ├── objective4/
 │    ├── README.md                
@@ -189,8 +189,8 @@ Entrega2-DS/
 |----------|------|
 | Objetivo 1 | [https://sdproject.store](https://sdproject.store) |
 | Objetivo 2 | [https://autoscale.sdproject.store](https://autoscale.sdproject.store) |
-| Objetivo 3 | [Objetivo3 sin SSL](http://a78a7fd1ac37a4734bd20136f8df93a6-1007279366.us-east-1.elb.amazonaws.com)) |
-| Objetivo 4 | [Objetivo4 sin SSL](http://a17ebd47692194dbd9e012af948f49ce-1510623585.us-east-1.elb.amazonaws.com)) |
+| Objetivo 3 | [Objetivo3 sin SSL](http://a78a7fd1ac37a4734bd20136f8df93a6-1007279366.us-east-1.elb.amazonaws.com) |
+| Objetivo 4 | [Objetivo4 sin SSL](http://a17ebd47692194dbd9e012af948f49ce-1510623585.us-east-1.elb.amazonaws.com) |
 
 ### Ejecución en producción
 
