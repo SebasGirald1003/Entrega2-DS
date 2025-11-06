@@ -4,13 +4,13 @@ metadata:
   name: nginx-ingress
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:651603065956:certificate/86030c0a-6ecf-403f-90c0-2620d4001ad6
     alb.ingress.kubernetes.io/ssl-redirect: '443'
 spec:
+  ingressClassName: alb
   rules:
     - host: kubernetes.sdproject.store
       http:
@@ -26,3 +26,4 @@ spec:
     - hosts:
         - kubernetes.sdproject.store
       secretName: tls-secret-placeholder
+
