@@ -38,7 +38,7 @@ Por último se ingresa a la flaskapp y se crean las tablas con:
 - Se configuró la plantilla de lanzamiento usando la AMI y siempre el mismo **VPC** y **Security Group** para que no hubiera errores de conexión.
 - En las opciones avanzadas de la plantilla de lanzamiento se configuraron las instrucciones del **user-data**
 
-```
+```bash
 #!/bin/bash
 apt update -y
 apt install -y docker.io docker-compose nfs-common
