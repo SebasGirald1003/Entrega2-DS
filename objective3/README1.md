@@ -206,7 +206,7 @@ spec:
 - Se generó un certificado SSL a través de **AWS Certificate Manager (ACM)**.  
 - El Ingress Controller integró automáticamente el certificado para HTTPS.
 
-URL final: [https://k8s.sdproject.store](https://k8s.sdproject.store)
+URL final: http://a78a7fd1ac37a4734bd20136f8df93a6-1007279366.us-east-1.elb.amazonaws.com
 
 ---
 
