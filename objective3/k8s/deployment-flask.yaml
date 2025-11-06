@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaskapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flaskapp
+  template:
+    metadata:
+      labels:
+        app: flaskapp
+    spec:
+      containers:
+      - name: flaskapp
+        image: jjvasquezg/entrega2-ds:latest
+        ports:
+        - containerPort: 5000
+        envFrom:
+          - configMapRef:
+              name: app-config
+          - secretRef:
+              name: db-secret
+        volumeMounts:
+        - name: flask-storage
+          mountPath: /app/uploads
+      volumes:
+      - name: flask-storage
+        persistentVolumeClaim:
+          claimName: flask-efs-pvc
