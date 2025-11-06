@@ -82,7 +82,7 @@ El proyecto implementa una arquitectura **monolítica escalable** con las siguie
 | MySQL | 8.0 | Base de datos relacional |
 | NGINX | 1.25 | Proxy inverso y gestor de tráfico |
 | AWS CLI / eksctl | latest | Administración de infraestructura AWS |
-| Kubernetes | 1.29 | Orquestación de contenedores (EKS) |
+| Kubernetes | 1.33 | Orquestación de contenedores (EKS) |
 
 ### Compilación y ejecución
 
