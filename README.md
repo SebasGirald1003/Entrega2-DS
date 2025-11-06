@@ -1,15 +1,16 @@
-# 📘 Proyecto 2 – Aplicación Escalable: BookStore Monolítica
+# Proyecto 2 – Aplicación Escalable: BookStore Monolítica
 
 **Materia:** ST0263 - Tópicos Especiales en Telemática  
 **Estudiantes:**  
 - Santiago Álvarez Peña - salvarezp4@eafit.edu.co  
-- Juanjo José Vásquez - jjvasquezg@eafit.edu.co  
-- Sebastián Giraldo - sgiraldoa7@eafit.edu.co  
+- Juan José Vásquez - jjvasquezg@eafit.edu.co  
+- Sebastián Giraldo - sgiraldoa7@eafit.edu.co
+  
 **Profesor:** Edwin Nelson Montoya Munera - emontoya@eafit.edu.co  
 
 ---
 
-## 🧩 1. Descripción general del proyecto
+## 1. Descripción general del proyecto
 
 El proyecto **BookStore Monolítica** consiste en una aplicación tipo **E-commerce distribuido** para la venta de libros de segunda mano, donde los usuarios pueden publicar, comprar y vender ejemplares.  
 A lo largo del curso, se evolucionó su despliegue desde una arquitectura monolítica básica hasta entornos **escalables y orquestados en Kubernetes**.
@@ -21,11 +22,11 @@ El proyecto se desarrolló en **cuatro fases u objetivos**, cada uno con un ento
 | **1** | Despliegue monolítico en AWS con EC2, NGINX y SSL (Let’s Encrypt). |
 | **2** | Escalamiento monolítico con Auto Scaling Groups, Load Balancer, RDS y EFS. |
 | **3** | Despliegue en clúster Kubernetes (EKS) con integración RDS y EFS. |
-| **4** | En desarrollo: Migración a microservicios o despliegue avanzado de base de datos HA. |
+| **4** | Despliegue de una aplicación demo de microservicios en Kubernetes. Fuente: [SocksShop](https://github.com/microservices-demo/microservices-demo) |
 
 ---
 
-## ✅ 1.1 Aspectos desarrollados
+## 1.1 Aspectos desarrollados
 
 - Despliegue completo de la aplicación en entornos AWS (EC2, RDS, EFS, EKS).  
 - Configuración de dominio y certificados SSL (Let’s Encrypt y ACM).  
@@ -36,30 +37,28 @@ El proyecto se desarrolló en **cuatro fases u objetivos**, cada uno con un ento
 
 ---
 
-## ⚠️ 1.2 Aspectos no desarrollados
+## 1.2 Aspectos no desarrollados
 
-- No se completó la **reingeniería a microservicios (Objetivo 4)**, actualmente en proceso.  
-- Faltan pruebas de **replicación de base de datos dentro de EKS** y automatización con CI/CD.  
-- No se implementó la capa de observabilidad (monitoring/logging centralizado).
+- Faltó implementar Certificación SSL para objetivos 3 y 4 con Kubernetes, pero esto fue debido a la falta de permisos por parte de la AMI en AWS Academy la cuál restringe este tipo de acciones.
 
 ---
 
-## 🧱 2. Arquitectura y diseño de alto nivel
+## 2. Arquitectura y diseño de alto nivel
 
-### 🔹 Arquitectura general del sistema
+### Arquitectura general del sistema
 
 El proyecto implementa una arquitectura **monolítica escalable** con las siguientes fases:
 
 ```
-[Usuarios] → [ALB/Ingress Controller] → [Nginx + Flask Containers] → [RDS / EFS]
+[Usuarios] → [ALB] → [Nginx + Flask Containers] → [RDS / EFS]
 ```
 
 - **Capa Web:** NGINX actuando como proxy inverso y punto de entrada HTTP/HTTPS.  
 - **Capa Lógica:** Aplicación Flask que gestiona autenticación, catálogo y compras.  
 - **Capa de Datos:** Base de datos Aurora MySQL (RDS) y almacenamiento compartido (EFS).  
-- **Infraestructura:** AWS EC2 (Objetivo 1 y 2) / Kubernetes EKS (Objetivo 3).
+- **Infraestructura:** AWS EC2 (Objetivo 1 y 2) / Kubernetes EKS (Objetivo 3 y 4).
 
-### 🔹 Patrones y buenas prácticas aplicadas
+### Patrones y buenas prácticas aplicadas
 
 - Despliegue reproducible con **Docker y Docker Compose**.  
 - Autoescalamiento horizontal con **ASG y Kubernetes HPA**.  
@@ -69,7 +68,7 @@ El proyecto implementa una arquitectura **monolítica escalable** con las siguie
 
 ---
 
-## 💻 3. Ambiente de desarrollo
+## 3. Ambiente de desarrollo
 
 ### Tecnologías principales
 
@@ -83,7 +82,7 @@ El proyecto implementa una arquitectura **monolítica escalable** con las siguie
 | AWS CLI / eksctl | latest | Administración de infraestructura AWS |
 | Kubernetes | 1.29 | Orquestación de contenedores (EKS) |
 
-### 🛠️ Compilación y ejecución
+### Compilación y ejecución
 
 ```bash
 # Clonar el repositorio
@@ -94,7 +93,7 @@ cd Entrega2-DS
 docker compose up -d --build
 ```
 
-### 🔧 Configuración de variables de entorno
+### Configuración de variables de entorno
 
 | Variable | Descripción | Ejemplo |
 |-----------|--------------|----------|
@@ -104,7 +103,7 @@ docker compose up -d --build
 | SECRET_KEY | Clave de sesión Flask | secretkey123 |
 | UPLOAD_FOLDER | Carpeta de almacenamiento de archivos | /mnt/efs/uploads |
 
-### 🗂️ Estructura de directorios
+### Estructura de directorios
 
 ```
 Entrega2-DS/
@@ -137,7 +136,6 @@ Entrega2-DS/
 │   ├── docker-compose.yml
 │   ├── Dockerfile
 │   ├── nginx.conf
-│   ├── user-data.sh
 │   └── README_Objetivo2.md
 │
 ├── objective3/
@@ -145,10 +143,13 @@ Entrega2-DS/
 │   ├── models/
 │   ├── templates/
 │   ├── k8s/
-│   │   ├── bookstore-deployment.yaml
-│   │   ├── efs-pv.yaml
-│   │   ├── ingress.yaml
+│   │   └── storage-efs.yaml
+│   │   ├── deployment-flask.yaml
+│   │   ├── deployment-nginx.yaml
+│   │   ├── private-ecr-driver.yaml
+│   │   └── configmap.yaml
 │   │   └── secrets.yaml
+│   │   └── service-loadbalancer.yaml
 │   ├── .env
 │   ├── app.py
 │   ├── config.py
@@ -159,35 +160,42 @@ Entrega2-DS/
 │   └── README_Objetivo3.md
 │
 ├── objective4/
-│   ├── (en desarrollo: microservicios o DB HA)
+│   ├── k8s/
+│   │   └── storage-efs.yaml
+│   │   ├── deployment-flask.yaml
+│   │   ├── deployment-nginx.yaml
+│   │   ├── private-ecr-driver.yaml
+│   │   └── configmap.yaml
+│   │   └── secrets.yaml
+│   │   └── service-loadbalancer.yaml
 │   └── README_Objetivo4.md
-│
 └── README_GENERAL.md
 
 ```
 
 ---
 
-## ☁️ 4. Ambiente de ejecución (producción)
+## 4. Ambiente de ejecución (producción)
 
 | Componente | Tecnología | Descripción |
 |-------------|-------------|-------------|
-| **Infraestructura Base** | AWS EC2 / EKS | Entornos desplegados en nube |
-| **Base de Datos** | Aurora MySQL (RDS) | Persistencia de datos |
+| **Infraestructura Base** | AWS EC2 / EKS / TargetGroups | Entornos desplegados en nube |
+| **Base de Datos** | Aurora MySQL (RDS) | Persistencia de datos y Alta Disponibilidad |
 | **Almacenamiento** | Elastic File System (EFS) | Archivos compartidos |
 | **Certificados SSL** | Let’s Encrypt / ACM | Comunicación segura |
 | **Escalamiento** | Auto Scaling Groups / HPA | Escalado horizontal |
-| **Balanceo de Carga** | ALB / Ingress Controller | Distribución de tráfico |
+| **Balanceo de Carga** | ALB | Distribución de tráfico |
 
-### 🌐 URLs de despliegue
+### URLs de despliegue
 
 | Entorno | URL |
 |----------|------|
 | Objetivo 1 | [https://sdproject.store](https://sdproject.store) |
 | Objetivo 2 | [https://autoscale.sdproject.store](https://autoscale.sdproject.store) |
-| Objetivo 3 | [https://k8s.sdproject.store](https://k8s.sdproject.store) |
+| Objetivo 3 | [Objetivo3 sin SSL](http://a78a7fd1ac37a4734bd20136f8df93a6-1007279366.us-east-1.elb.amazonaws.com)) |
+| Objetivo 4 | [Objetivo4 sin SSL](http://a17ebd47692194dbd9e012af948f49ce-1510623585.us-east-1.elb.amazonaws.com)) |
 
-### 🚀 Ejecución en producción
+### Ejecución en producción
 
 Cada entorno se despliega automáticamente al iniciar sus servicios, ya sea en Docker, EC2 o Kubernetes.  
 Para el entorno EKS:
@@ -199,7 +207,7 @@ kubectl get pods,svc,ingress
 
 ---
 
-## 📚 5. Referencias y recursos
+## 5. Referencias y recursos
 
 - [Repositorio base del curso ST0263](https://github.com/st0263eafit/st0263-252/tree/main/proyecto2)  
 - [Documentación Flask](https://flask.palletsprojects.com/)  
@@ -211,5 +219,5 @@ kubectl get pods,svc,ingress
 
 ---
 
-✍️ **Autores:** *Santiago Álvarez Peña, Juanjo José Vásquez, Sebastián Giraldo*  
-📅 **Fecha:** Noviembre 2025
+**Autores:** *Santiago Álvarez Peña, Juan José Vásquez, Sebastián Giraldo*  
+**Fecha:** Noviembre 2025
