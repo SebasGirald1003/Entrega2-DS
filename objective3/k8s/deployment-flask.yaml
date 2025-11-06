@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: flaskapp
-        image: jjvasquezg/entrega2-ds:latest
+        image: sgirald2019/entrega2-ds:latest
         ports:
         - containerPort: 5000
         envFrom:
